@@ -24,6 +24,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.*;
+import org.springframework.core.ResolvableType;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.AbstractResource;
 import org.springframework.core.io.ClassPathResource;
@@ -123,6 +124,11 @@ public class MockApplicationContext extends GroovyObjectSupport implements WebAp
         // do nothing
     }
 
+    // Added in Spring 4.2
+    public void publishEvent(Object event) {
+        // do nothing
+    }
+    
     public boolean containsBeanDefinition(String beanName) {
         return beans.containsKey(beanName);
     }
@@ -149,6 +155,11 @@ public class MockApplicationContext extends GroovyObjectSupport implements WebAp
     @SuppressWarnings("rawtypes")
     public String[] getBeanNamesForType(Class type, boolean includePrototypes, boolean includeFactoryBeans) {
         return getBeanNamesForType(type);
+    }
+
+    // Added in Spring 4.2
+    public String[] getBeanNamesForType(ResolvableType type) {
+        return getBeanNamesForType(type.getRawClass());
     }
 
     @SuppressWarnings("unchecked")
@@ -262,6 +273,11 @@ public class MockApplicationContext extends GroovyObjectSupport implements WebAp
         return aClass.isInstance(getBean(name));
     }
 
+    // Added in Spring 4.2
+    public boolean isTypeMatch(String name, ResolvableType aClass) {
+        return aClass.isInstance(getBean(name));
+    }
+    
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public Class getType(String name) throws NoSuchBeanDefinitionException {
         if (!beans.containsKey(name)) {
